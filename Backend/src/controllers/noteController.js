@@ -1,4 +1,4 @@
-const {User, Note} = require('../database/sequelize')
+const { User, Note } = require('../database/sequelize')
 
 module.exports = {
     createNote: async (req, res, next) => {
@@ -32,7 +32,28 @@ module.exports = {
     },
 
     editNote: async (req, res, next) => {
-
+        let updateSet = {}
+        if (req.body.title)
+            updateSet.title = req.body.title
+        if (req.body.body)
+            updateSet.body = req.body.body
+        if (req.body.color)
+            updateSet.color = req.body.color
+        let numChanged = await Note.update(updateSet, {
+            where: {
+                id: req.params.id, userId: req.user.id
+            }
+        })
+        if (numChanged != 0) {
+            res.json({
+                status: "ok",
+            })
+        } else {
+            res.status(404).json({
+                status: "error",
+                message: "Note not found"
+            })
+        }
     },
 
     getNote: async (req, res, next) => {
