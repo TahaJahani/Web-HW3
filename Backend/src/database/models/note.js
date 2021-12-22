@@ -23,7 +23,5 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Note',
   });
-
-  Note.belongsTo(User)
   return Note;
 };

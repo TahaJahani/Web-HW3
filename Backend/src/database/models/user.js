@@ -20,7 +20,5 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
   });
-
-  User.hasMany(Note)
   return User;
 };
