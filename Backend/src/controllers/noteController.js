@@ -1,4 +1,4 @@
-const { User, Note } = require('../database/sequelize')
+const { Note } = require('../database/sequelize')
 
 module.exports = {
     createNote: async (req, res, next) => {
@@ -71,6 +71,21 @@ module.exports = {
     },
 
     deleteNote: async (req, res, next) => {
-
+        let numDeleted = await Note.destroy({
+            where: {
+                id: req.params.id,
+                userId: req.user.id,
+            }
+        })
+        if (numDeleted != 0) {
+            res.json({
+                status: "ok",
+            })
+        } else {
+            res.status(404).json({
+                status: "error",
+                message: "Note not found"
+            })
+        }
     }
 }
