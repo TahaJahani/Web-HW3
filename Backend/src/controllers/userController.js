@@ -1,4 +1,4 @@
-const { User, Token } = require("../database/sequelize")
+const { User } = require("../database/sequelize")
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')

@@ -24,7 +24,9 @@ module.exports = {
     },
 
     getAllNotes: async (req, res, next) => {
-        let notes = await req.user.getNotes();
+        let notes = await req.user.getNotes({
+            attributes: ["id", "title", "color"]
+        });
         res.json({
             status: "ok",
             notes: notes

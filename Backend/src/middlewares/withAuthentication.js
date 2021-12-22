@@ -1,4 +1,4 @@
-const { User, Token } = require('../database/sequelize')
+const { User } = require('../database/sequelize')
 const jwt = require('jsonwebtoken')
 
 module.exports = async (req, res, next) => {
