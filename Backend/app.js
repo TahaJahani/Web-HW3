@@ -1,4 +1,5 @@
 var createError = require('http-errors');
+var cors = require('cors')
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -20,6 +21,12 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+
+const corsOptions = {
+  origin: "http://localhost:3000"
+};
+
+app.use(cors(corsOptions))
 
 app.use(logger('dev'));
 app.use(express.json());

@@ -14,7 +14,11 @@ module.exports = async (req, res, next) => {
     jwt.verify(apiKey, process.env.SECRET_KEY, async (err, user) => {
         if (err) {
             console.log(err);
-            return res.sendStatus(403)
+            res.status(403).json({
+                status: "error",
+                message: "access denied"
+            })
+            return
         }
         req.user = await User.findOne({
             where: {

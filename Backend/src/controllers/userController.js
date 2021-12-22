@@ -17,8 +17,7 @@ module.exports = {
                 username: req.body.username
             }
         })
-
-        let isPasswordValid = bcrypt.compare(req.body.password, user?.password)
+        let isPasswordValid = user && await bcrypt.compare(req.body.password, user.password)
         if (!isPasswordValid || !user) {
             res.status(403).json({
                 status: "error",
