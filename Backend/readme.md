@@ -5,3 +5,9 @@ To run this project, be sure to have `npm` or `yarn` installed. Then run this co
 and wait for the dependencies to install. Afterwards, just run the command below:
 `npm start`
 Now you can access the backend routes on `localhost:3000`
+
+## Migrations and Database
+To have your database ready, create a `.env` file, and fill that with the information like provided in `.env.example`.
+After that, run this command:
+`npx sequelize-cli db:migrate`
+and all the required tables will be ready!
