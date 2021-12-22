@@ -1,10 +1,44 @@
 // import User from "../database/models/user"
 // let User = require("../database/models/user")
-const {User} = require("../database/sequelize")
-let bcrypt = require('bcrypt')
+const { User, Token } = require("../database/sequelize")
+const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 
-let login = (req, res, next) => {
+let login = async (req, res, next) => {
+    if (!req.body.username || !req.body.password) {
+        res.status(400).json({
+            status: "error",
+            message: "Username and Password are required"
+        })
+        return
+    }
+    let user = await User.findOne({
+        where: {
+            username: req.body.username
+        }
+    })
 
+    let isPasswordValid = bcrypt.compare(req.body.password, user?.password)
+    if (!isPasswordValid || !user) {
+        res.status(403).json({
+            status: "error",
+            message: "Username or Password is incorrect",
+        })
+        return
+    }
+    let token = crypto.randomBytes(48).toString('hex');
+    await Token.create({
+        userId: user.id,
+        token: token,
+        deletedAt: null,
+    })
+    res.json({
+        status: "ok",
+        result: {
+            token: token,
+            user: user,
+        }
+    })
 }
 
 let logout = (req, res, next) => {
@@ -44,4 +78,4 @@ let register = async (req, res, next) => {
 }
 
 
-module.exports = {login, logout, register}
+module.exports = { login, logout, register }

@@ -3,7 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const {User, Note} = require('./src/database/sequelize')
+const {User, Note, Token} = require('./src/database/sequelize')
 
 var indexRouter = require('./src/routes/index');
 var usersRouter = require('./src/routes/users');
