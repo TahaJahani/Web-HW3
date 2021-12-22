@@ -3,6 +3,8 @@
 const { User, Token } = require("../database/sequelize")
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 let login = async (req, res, next) => {
     if (!req.body.username || !req.body.password) {
@@ -26,12 +28,11 @@ let login = async (req, res, next) => {
         })
         return
     }
-    let token = crypto.randomBytes(48).toString('hex');
-    await Token.create({
-        userId: user.id,
-        token: token,
-        deletedAt: null,
-    })
+    let toSign = {
+        username: user.username,
+        id: user.id
+    }
+    let token = jwt.sign(toSign, process.env.SECRET_KEY, {expiresIn: '3600s'})
     res.json({
         status: "ok",
         result: {

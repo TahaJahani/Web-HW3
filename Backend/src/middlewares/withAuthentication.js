@@ -1,6 +1,8 @@
-const {User, Token} = require('../database/sequelize')
+const { User, Token } = require('../database/sequelize')
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 module.exports = async (req, res, next) => {
-    let apiKey = req.headers.authorization;
+    let apiKey = req.headers.authorization && req.headers.authorization.split(' ')[1];
     if (!apiKey) {
         res.status(403).json({
             status: "error",
@@ -8,14 +10,16 @@ module.exports = async (req, res, next) => {
         })
         return
     }
-    let token = await Token.findOne({
-        where: {
-            token: apiKey,
-        },
-        include: [{
-            model: User
-        }]
+
+    jwt.verify(apiKey, process.env.SECRET_KEY, async (err, user) => {
+        console.log(err)
+        if (err) return res.sendStatus(403)
+        req.user = await User.findOne({
+            where: {
+                id: user.id,
+            }
+        })
+
+        next()
     })
-    req.user = token.user;
-    next();
 }
