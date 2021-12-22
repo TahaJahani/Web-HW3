@@ -1,4 +1,4 @@
-# @3b-HW2 Back-End
+# Web-HW2 Back-End
 This backend is written in JS using Express framework.
 To run this project, be sure to have `npm` or `yarn` installed. Then run this command:
 `npm install`
