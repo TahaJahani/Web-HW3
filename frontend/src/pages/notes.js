@@ -1,4 +1,4 @@
-import { CircularProgress, Backdrop, Box, Grid, Container } from '@mui/material';
+import { CircularProgress, Backdrop, Box, Grid, Paper, Container } from '@mui/material';
 import * as React from 'react';
 import { useRecoilState } from 'recoil'
 import { notesState } from '../state/notesAtom'
@@ -51,23 +51,25 @@ function NotesPage() {
     }
 
     return (
-        <Container>
-            <Box>
-                <Grid container spacing={2}>
-                    <Grid item sx={5}>
+        <Box height="100vh">
+            <Grid container sx={{height: '100%'}}>
+                <Grid item xs={2} height='100%'>
+                    <Paper variant='outlined' sx={{height: '100%'}}>
                         <NoteList notes={notes} onNoteSelected={onNoteSelected} />
-                    </Grid>
-                    <Grid item sx={7}>
-                        {selectedNote ? <Note {...selectedNote} onClose={onNoteClosed} onEdit={onNoteEdited} onDelete={onNoteDeleted} /> : <CreateNote onSubmit={onNoteSubmitted}/>}
-                    </Grid>
+                    </Paper>
                 </Grid>
-            </Box>
+                <Grid item xs={10}>
+                    <Container maxWidth='md' sx={{pt: 8, mt: 16}}>
+                        {selectedNote ? <Note {...selectedNote} onClose={onNoteClosed} onEdit={onNoteEdited} onDelete={onNoteDeleted} /> : <CreateNote onSubmit={onNoteSubmitted} />}
+                    </Container>
+                </Grid>
+            </Grid>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={!dataLoaded}>
                 <CircularProgress color="inherit" />
             </Backdrop>
-        </Container>
+        </Box>
     )
 }
 
