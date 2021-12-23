@@ -1,4 +1,4 @@
-import { CircularProgress,Backdrop,Box, Grid } from '@mui/material';
+import { CircularProgress, Backdrop, Box, Grid, Container } from '@mui/material';
 import * as React from 'react';
 import { useRecoilState } from 'recoil'
 import { notesState } from '../state/notesAtom'
@@ -8,6 +8,8 @@ import Note from '../components/Note';
 import CreateNote from '../components/CreateNode';
 import loadNoteList from '../axiosCall/loadNoteList';
 import loadNote from '../axiosCall/loadNote';
+import deleteNote from '../axiosCall/deleteNote';
+import createNote from '../axiosCall/createNote';
 
 
 function NotesPage() {
@@ -29,12 +31,19 @@ function NotesPage() {
         setSelectedNote(null)
     }
 
-    const onNoteDeleted = (note) => {
-
+    const onNoteDeleted = (noteId) => {
+        deleteNote(noteId, token, () => {
+            setNotes(notes.filter((item) => (item.id != noteId)))
+            setSelectedNote(null)
+        })
     }
 
     const onNoteEdited = (note) => {
 
+    }
+
+    const onNoteSubmitted = (note) => {
+        createNote(note, token, (submitedNote) => setNotes([...notes, submitedNote]))
     }
 
     if (!dataLoaded) {
@@ -42,22 +51,23 @@ function NotesPage() {
     }
 
     return (
-        <Box>
-            <Grid container spacing={2}>
-                <Grid item sx={5}>
-                    <NoteList notes={notes} onNoteSelected={onNoteSelected} />
+        <Container>
+            <Box>
+                <Grid container spacing={2}>
+                    <Grid item sx={5}>
+                        <NoteList notes={notes} onNoteSelected={onNoteSelected} />
+                    </Grid>
+                    <Grid item sx={7}>
+                        {selectedNote ? <Note {...selectedNote} onClose={onNoteClosed} onEdit={onNoteEdited} onDelete={onNoteDeleted} /> : <CreateNote onSubmit={onNoteSubmitted}/>}
+                    </Grid>
                 </Grid>
-                <Grid item sx={7}>
-                    {selectedNote ? <Note {...selectedNote} onClose={onNoteClosed} onEdit={onNoteEdited} onDelete={onNoteDeleted} /> : <CreateNote />}
-                </Grid>
-            </Grid>
+            </Box>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-                open={!dataLoaded}
-            >
+                open={!dataLoaded}>
                 <CircularProgress color="inherit" />
             </Backdrop>
-        </Box>
+        </Container>
     )
 }
 

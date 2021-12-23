@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 function Note(props) {
-    const {title, body, color, onClose, onDelete, onEdit} = props;
+    const {id, title, body, color, onClose, onDelete, onEdit} = props;
     return(
         <Card variant="elevation" sx={{backgroundColor: color, margin: 2}}>
             <IconButton sx={{float: "right"}} onClick={onClose}>
@@ -24,7 +24,7 @@ function Note(props) {
                 <Button color='primary'>
                     <EditIcon />
                 </Button>
-                <Button color='error'>
+                <Button color='error' onClick={() => onDelete(id)}>
                     <DeleteIcon/>
                 </Button>
             </ButtonGroup>
