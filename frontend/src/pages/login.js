@@ -33,6 +33,23 @@ function LoginPage() {
             })
     }
 
+    const registerClicked = async () => {
+        let options = {
+            method: 'post',
+            url: 'http://localhost:3030/api/users/register',
+            data: {
+                username: username,
+                password: password,
+            },
+        }
+        axios(options)
+            .then((res) => {
+
+            }, (err) => {
+                setError(err.response.data.message)
+            })
+    }
+
     return (
         <Container maxWidth="sm" alignItems="center" sx={{ marginTop: 8 }}>
             <Card variant='outlined' sx={{ paddingY: 6, paddingX: 4 }}>
@@ -56,7 +73,7 @@ function LoginPage() {
                 </Typography>
                 <Button variant='contained' fullWidth onClick={loginClicked}>LOGIN</Button>
                 <Divider sx={{ marginY: 2 }}>Or</Divider>
-                <Button variant='outlined' fullWidth>REGISTER</Button>
+                <Button variant='outlined' fullWidth onClick={registerClicked}>REGISTER</Button>
             </Card>
         </Container>
     )
