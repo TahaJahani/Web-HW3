@@ -21,7 +21,7 @@ function Note(props) {
             </Typography>
             <Divider variant='fullWidth'/>
             <ButtonGroup variant='outlined' size='small' sx={{m: 2, float: 'right'}}>
-                <Button color='primary'>
+                <Button color='primary' onClick={() => onEdit({id, title, body, color})}>
                     <EditIcon />
                 </Button>
                 <Button color='error' onClick={() => onDelete(id)}>

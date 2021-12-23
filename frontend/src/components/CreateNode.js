@@ -3,17 +3,19 @@ import * as React from 'react'
 import theme from '../themes/mainTheme'
 import colors from '../data/colors'
 
-function CreateNote({ onSubmit }) {
-
-    const [title, setTitle] = React.useState()
-    const [body, setBody] = React.useState()
-    const [color, setColor] = React.useState("#ffffff")
+function CreateNote({ note ,onSubmit }) {
+    if (!note)
+        note = {id: 0, title: '', body: '', color: '#ffffff'}
+    const [title, setTitle] = React.useState(note.title)
+    const [body, setBody] = React.useState(note.body)
+    const [color, setColor] = React.useState(note.color)
 
     const sumbitClicked = () => {
-        onSubmit({ title, body, color })
         setTitle('')
         setBody('')
         setColor('#ffffff')
+        let id = note.id
+        onSubmit({ id, title, body, color })
     }
 
     return (

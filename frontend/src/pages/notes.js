@@ -10,6 +10,7 @@ import loadNoteList from '../axiosCall/loadNoteList';
 import loadNote from '../axiosCall/loadNote';
 import deleteNote from '../axiosCall/deleteNote';
 import createNote from '../axiosCall/createNote';
+import editNote from '../axiosCall/editNote';
 
 
 function NotesPage() {
@@ -17,9 +18,13 @@ function NotesPage() {
     const [notes, setNotes] = useRecoilState(notesState)
     const [token, setToken] = useRecoilState(tokenState)
     const [selectedNote, setSelectedNote] = React.useState()
+    const [action, setAction] = React.useState('none') //1. none, 2. view 3. edit
 
     const onNoteSelected = (note) => {
-        loadNote(note.id, token, (note) => setSelectedNote(note))
+        loadNote(note.id, token, (note) => {
+            setSelectedNote(note)
+            setAction('view')
+        })
     }
 
     const onNotesLoaded = (notesList) => {
@@ -29,17 +34,27 @@ function NotesPage() {
 
     const onNoteClosed = () => {
         setSelectedNote(null)
+        setAction('none')
     }
 
     const onNoteDeleted = (noteId) => {
         deleteNote(noteId, token, () => {
             setNotes(notes.filter((item) => (item.id != noteId)))
             setSelectedNote(null)
+            setAction('none')
         })
     }
 
     const onNoteEdited = (note) => {
+        editNote(note, token, () => {
+            setSelectedNote(note)
+            setAction('view')
+        })
+    }
 
+    const onEditClicked = (note) => {
+        setSelectedNote(note)
+        setAction('edit')
     }
 
     const onNoteSubmitted = (note) => {
@@ -60,7 +75,8 @@ function NotesPage() {
                 </Grid>
                 <Grid item xs={10}>
                     <Container maxWidth='md' sx={{pt: 8, mt: 16}}>
-                        {selectedNote ? <Note {...selectedNote} onClose={onNoteClosed} onEdit={onNoteEdited} onDelete={onNoteDeleted} /> : <CreateNote onSubmit={onNoteSubmitted} />}
+                        {action === 'view' ? <Note {...selectedNote} onClose={onNoteClosed} onEdit={onEditClicked} onDelete={onNoteDeleted} /> 
+                                    : action === 'show' ? <CreateNote onSubmit={onNoteSubmitted} /> : <CreateNote note={selectedNote} onSubmit={onNoteEdited} />}
                     </Container>
                 </Grid>
             </Grid>
