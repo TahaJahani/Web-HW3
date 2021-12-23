@@ -7,7 +7,7 @@ import EditIcon from '@mui/icons-material/Edit';
 function Note(props) {
     const {title, body, color} = props;
     return(
-        <Card variant="outlined" sx={{backgroundColor: color, margin: 2, padding: 2}}>
+        <Card variant="elevation" sx={{backgroundColor: color, margin: 2, padding: 2}}>
             <Typography variant='h6'>
                 {title}
             </Typography>

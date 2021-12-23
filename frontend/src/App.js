@@ -11,6 +11,7 @@ import {
 import { RecoilRoot,} from 'recoil';
 import Note from './components/Note';
 import RegisterPage from './pages/register';
+import NotesPage from './pages/notes';
 
 function App() {
 
@@ -20,7 +21,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
-          <Route path="/notes" element={<Note title="sample title" body="sample body" color="#ffffff" />} />
+          <Route path="/notes" element={<NotesPage />} />
         </Routes>
       </Router>
     </RecoilRoot>
