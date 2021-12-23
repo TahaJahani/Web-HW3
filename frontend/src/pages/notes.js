@@ -25,6 +25,18 @@ function NotesPage() {
         setNotes(notesList)
     }
 
+    const onNoteClosed = () => {
+        setSelectedNote(null)
+    }
+
+    const onNoteDeleted = (note) => {
+
+    }
+
+    const onNoteEdited = (note) => {
+
+    }
+
     if (!dataLoaded) {
         loadNoteList(token, onNotesLoaded)
     }
@@ -36,7 +48,7 @@ function NotesPage() {
                     <NoteList notes={notes} onNoteSelected={onNoteSelected} />
                 </Grid>
                 <Grid item sx={7}>
-                    {selectedNote ? <Note title={selectedNote.title} body={selectedNote.body} color={selectedNote.color} /> : <CreateNote />}
+                    {selectedNote ? <Note {...selectedNote} onClose={onNoteClosed} onEdit={onNoteEdited} onDelete={onNoteDeleted} /> : <CreateNote />}
                 </Grid>
             </Grid>
             <Backdrop
