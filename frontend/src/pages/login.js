@@ -1,9 +1,15 @@
 import * as React from 'react';
 import { TextField, Card, Button, Container, Paper, Stack, Typography, Divider } from '@mui/material';
+import { useRecoilState } from 'recoil'
+import { useNavigate } from 'react-router-dom';
+import {userState} from '../state/userAtom'
+import {tokenState} from '../state/tokenAtom'
 const axios = require('axios')
 
 function LoginPage() {
-
+    const navigate = useNavigate()
+    const [user, setUser] = useRecoilState(userState)
+    const [token, setToken] = useRecoilState(tokenState)
     const [username, setUsername] = React.useState();
     const [password, setPassword] = React.useState();
     const [error, setError] = React.useState();
@@ -19,7 +25,9 @@ function LoginPage() {
         }
         axios(options)
             .then((res) => {
-                console.log(res.data.result.token)
+                setToken(res.data.result.token)
+                setUser(res.data.result.user)
+                navigate('/notes')
             }, (err) => {
                 setError(err.response.data.message)
             })
