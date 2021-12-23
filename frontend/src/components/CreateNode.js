@@ -1,14 +1,16 @@
-import { Button, Card, Container, Box, Radio,TextField } from '@mui/material'
+import { Button, Card, Container, Box, Radio, TextField, Typography } from '@mui/material'
 import * as React from 'react'
+import theme from '../themes/mainTheme'
+import colors from '../data/colors'
 
-function CreateNote({onSubmit}) {
+function CreateNote({ onSubmit }) {
 
     const [title, setTitle] = React.useState()
     const [body, setBody] = React.useState()
     const [color, setColor] = React.useState("#ffffff")
 
     const sumbitClicked = () => {
-        onSubmit({title, body, color})
+        onSubmit({ title, body, color })
         setTitle('')
         setBody('')
         setColor('#ffffff')
@@ -35,23 +37,20 @@ function CreateNote({onSubmit}) {
                 value={body}
                 onChange={(e) => setBody(e.target.value)}
                 fullWidth />
-            <Box>
-                <Box>
-                    {/* todo */}
-                    {/* <Radio
-                        checked={color === '#ffee33'}
-                        onChange={() => setColor('#ffee33')}
-                        value="#ffee33"
-                        color='#ffee33'
-                        name="radio-buttons"
-                    />
+            <Box sx={{mt: 2}}>
+                <Typography component='span' color='grey'>
+                    Color
+                </Typography>
+                {colors.map((item, i) => (
                     <Radio
-                        checked={color === '#000000'}
-                        onChange={() => setColor('#ffee33')}
-                        value="b"
-                        name="radio-buttons"
-                    /> */}
-                </Box>
+                        checked={color === item.code}
+                        onChange={() => setColor(item.code)}
+                        value={item.code}
+                        theme={theme}
+                        color={item.name}
+                        name="colors"
+                    />
+                ))}
                 <Button variant='contained' sx={{ float: 'right' }} onClick={sumbitClicked}>Submit</Button>
             </Box>
         </Card>
