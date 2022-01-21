@@ -105,10 +105,10 @@ server.addService(apiProto.ClearCacheService.service, {
 });
 
 server.bindAsync(
-    "127.0.0.1:50051",
+    "127.0.0.1:" + (process.argv[2] || "50051"),
     grpc.ServerCredentials.createInsecure(),
     (error, port) => {
-      console.log("Server running at http://127.0.0.1:50051");
+      console.log("Server running at http://127.0.0.1:" + (process.argv[2] || "50051"));
       server.start();
     }
 );
