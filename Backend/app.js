@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config()
 const {User, Note, Token} = require('./src/database/sequelize')
+const withRateLimit = require("./src/middlewares/withRateLimit")
 
 var indexRouter = require('./src/routes/index');
 var usersRouter = require('./src/routes/users');
@@ -27,6 +28,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions))
+app.use(withRateLimit)
 
 app.set('port', process.env.PORT | 3000)
 app.use(logger('dev'));

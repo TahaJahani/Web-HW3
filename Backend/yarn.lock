@@ -851,6 +851,11 @@ node-fetch@^2.6.5:
   dependencies:
     whatwg-url "^5.0.0"
 
+node-singleflight@^0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/node-singleflight/-/node-singleflight-0.1.2.tgz#d3c6ae26c5bf652645821acc5e78186d487f576a"
+  integrity sha512-HJT3MRg+fo+f/1m4S5iV6a6KOHPI4n2/w8wvl9iuN0KuSJgV/OMDlfQP3WJpLPZPQ7oU5mZwxjVIdvk9CQcZ+w==
+
 nopt@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-5.0.0.tgz#530942bb58a512fccafe53fe210f13a25355dc88"
