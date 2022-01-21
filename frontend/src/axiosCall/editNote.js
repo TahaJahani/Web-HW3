@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 const axios = require('axios')
 
 
@@ -18,7 +19,11 @@ async function editNote(note, token, onResponse) {
         .then((res) => {
             onResponse(res.data.notes)
         }, (err) => {
-            console.log(err.response)
+            console.log(err)
+            if (err.response.status == 409) {
+                const navigate = useNavigate()
+                navigate("/error")
+            }
         })
 }
 

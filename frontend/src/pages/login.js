@@ -2,8 +2,8 @@ import * as React from 'react';
 import { TextField, Card, Button, Container, Paper, Stack, Typography, Divider } from '@mui/material';
 import { useRecoilState } from 'recoil'
 import { useNavigate } from 'react-router-dom';
-import {userState} from '../state/userAtom'
-import {tokenState} from '../state/tokenAtom'
+import { userState } from '../state/userAtom'
+import { tokenState } from '../state/tokenAtom'
 const axios = require('axios')
 
 function LoginPage() {
@@ -30,6 +30,10 @@ function LoginPage() {
                 navigate('/notes')
             }, (err) => {
                 setError(err.response.data.message)
+                console.log(err)
+                if (err.response.status == 409) {
+                    navigate("/error")
+                }
             })
     }
 
@@ -47,6 +51,10 @@ function LoginPage() {
 
             }, (err) => {
                 setError(err.response.data.message)
+                console.log(err)
+                if (err.response.status == 409) {
+                    navigate("/error")
+                }
             })
     }
 
@@ -66,9 +74,9 @@ function LoginPage() {
                     fullWidth
                     onChange={(val) => setPassword(val.target.value)}
                     sx={{ marginBottom: 2 }} />
-                <Typography 
-                    color='error' 
-                    sx={{marginBottom: 4}}>
+                <Typography
+                    color='error'
+                    sx={{ marginBottom: 4 }}>
                     {error}
                 </Typography>
                 <Button variant='contained' fullWidth onClick={loginClicked}>LOGIN</Button>

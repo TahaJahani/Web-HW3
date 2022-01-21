@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import { RecoilRoot,} from 'recoil';
 import NotesPage from './pages/notes';
+import ErrorPage from './pages/error';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/notes" element={<NotesPage />} />
+          <Route path="/error" element={<ErrorPage />} />
         </Routes>
       </Router>
     </RecoilRoot>
