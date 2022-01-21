@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
         return
     }
 
-    jwt.verify(apiKey, process.env.SECRET_KEY, async (err, user) => {
+    jwt.verify(apiKey, process.env.SECRET_KEY, async (err, data) => {
         if (err) {
             console.log(err);
             res.status(403).json({
@@ -20,12 +20,7 @@ module.exports = async (req, res, next) => {
             })
             return
         }
-        req.user = await User.findOne({
-            where: {
-                id: user.id,
-            }
-        })
-
+        req.user = JSON.parse(data.user)
         next()
     })
 }

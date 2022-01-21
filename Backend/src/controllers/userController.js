@@ -25,9 +25,13 @@ module.exports = {
             })
             return
         }
-        let toSign = {
+        let userToSign = {
+            id: user.id,
             username: user.username,
-            id: user.id
+            isAdmin: user.username === 'admin',
+        }
+        let toSign = {
+            user: JSON.stringify(userToSign),
         }
         let token = jwt.sign(toSign, process.env.SECRET_KEY, { expiresIn: '3600s' })
         res.json({
