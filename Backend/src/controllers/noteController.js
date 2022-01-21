@@ -1,5 +1,6 @@
+const user = require('../database/models/user');
 const { Note } = require('../database/sequelize')
-const {saveSingleNote, getSingleNote, deleteNote} = require("../services/NotesCacheService");
+const { saveSingleNote, getSingleNote, deleteNote } = require("../services/NotesCacheService");
 
 module.exports = {
     createNote: async (req, res, next) => {
@@ -27,12 +28,16 @@ module.exports = {
     },
 
     getAllNotes: async (req, res, next) => {
-        let notes = await Note.findAll({
-            where: {
-                userId: req.user.id
-            },
-            attributes: ["id", "title", "color"]
-        })
+        let options = { attributes: ["id", "title", "color"] }
+        console.log(req.user.id)
+        if (!req.user.isAdmin)
+            options = {
+                ...options,
+                where: {
+                    userId: req.user.id
+                }
+            }
+        let notes = await Note.findAll(options)
         res.json({
             status: "ok",
             notes: notes
@@ -47,11 +52,12 @@ module.exports = {
             updateSet.body = req.body.body
         if (req.body.color)
             updateSet.color = req.body.color
-        let numChanged = await Note.update(updateSet, {
-            where: {
-                id: req.params.id, userId: req.user.id
-            }
-        })
+        let whereClause = {
+            id: req.params.id
+        }
+        if (!req.user.isAdmin)
+            whereClause = { ...whereClause, userId: req.user.id }
+        let numChanged = await Note.update(updateSet, { where: whereClause })
         deleteNote(req.params.id, req.user.id)
         if (numChanged != 0) {
             res.json({
@@ -66,13 +72,13 @@ module.exports = {
     },
 
     getNote: async (req, res, next) => {
+        let whereClause = { id: req.params.id }
+        if (!req.user.isAdmin)
+            whereClause = { ...whereClause, userId: req.user.id }
         getSingleNote(req.params.id, req.user.id, async (note) => {
             if (!note) {
                 let note = await Note.findOne({
-                    where: {
-                        id: req.params.id,
-                        userId: req.user.id
-                    }
+                    where: whereClause
                 })
                 saveSingleNote(note, req.user.id)
                 res.json({
@@ -90,15 +96,15 @@ module.exports = {
                 }
             })
         })
-        
+
     },
 
     deleteNote: async (req, res, next) => {
+        let whereClause = { id: req.params.id }
+        if (!req.user.isAdmin)
+            whereClause = { ...whereClause, userId: req.user.id }
         let numDeleted = await Note.destroy({
-            where: {
-                id: req.params.id,
-                userId: req.user.id,
-            }
+            where: whereClause
         })
         deleteNote(req.params.id, req.user.id)
         if (numDeleted != 0) {
