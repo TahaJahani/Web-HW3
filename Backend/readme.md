@@ -11,3 +11,8 @@ To have your database ready, create a `.env` file, and fill that with the inform
 After that, run this command:
 `npx sequelize-cli db:migrate`
 and all the required tables will be ready!
+
+## Seeding
+Your system should have one admin user. to add this user run the command:
+`npx sequelize-cli db:seed:all`
+A user with username `admin` and password `admin` will be added to database. This user has the ability to see and edit all notes.
