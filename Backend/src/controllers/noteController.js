@@ -1,5 +1,6 @@
 const { Note } = require('../database/sequelize')
 const {saveSingleNote, getSingleNote, deleteNote} = require("../services/NotesCacheService");
+const singleflight = require('node-singleflight')
 
 module.exports = {
     createNote: async (req, res, next) => {
@@ -26,13 +27,15 @@ module.exports = {
     },
 
     getAllNotes: async (req, res, next) => {
-        let notes = await req.user.getNotes({
-            attributes: ["id", "title", "color"]
+        let _ = singleflight.Do('getAllNotes', async () => {
+            let notes = await req.user.getNotes({
+                attributes: ["id", "title", "color"]
+            });
+            res.json({
+                status: "ok",
+                notes: notes
+            })
         });
-        res.json({
-            status: "ok",
-            notes: notes
-        })
     },
 
     editNote: async (req, res, next) => {
@@ -62,30 +65,33 @@ module.exports = {
     },
 
     getNote: async (req, res, next) => {
-        getSingleNote(req.params.id, req.user.id, async (note) => {
-            if (!note) {
-                let note = await req.user.getNotes({
-                    where: {
-                        id: req.params.id
-                    }
-                });
-                note = note[0];
-                saveSingleNote(note, req.user.id)
+        let _ = singleflight.Do('getNote', async () => { 
+            getSingleNote(req.params.id, req.user.id, async (note) => {
+                if (!note) {
+                    let note = await req.user.getNotes({
+                        where: {
+                            id: req.params.id
+                        }
+                    });
+                    note = note[0];
+                    saveSingleNote(note, req.user.id)
+                    res.json({
+                        status: "ok",
+                        result: {
+                            note: note,
+                        }
+                    })
+                    return;
+                }
                 res.json({
                     status: "ok",
                     result: {
                         note: note,
                     }
                 })
-                return;
-            }
-            res.json({
-                status: "ok",
-                result: {
-                    note: note,
-                }
             })
-        })
+        });
+        
         
     },
 
