@@ -13,10 +13,11 @@ module.exports = {
             })
             return
         }
-        let note = await req.user.createNote({
+        let note = await Note.create({
             title: title,
             body: body,
             color: color,
+            userId: req.user.id
         })
         saveSingleNote(note, req.user.id)
         res.json({
@@ -26,9 +27,12 @@ module.exports = {
     },
 
     getAllNotes: async (req, res, next) => {
-        let notes = await req.user.getNotes({
+        let notes = await Note.findAll({
+            where: {
+                userId: req.user.id
+            },
             attributes: ["id", "title", "color"]
-        });
+        })
         res.json({
             status: "ok",
             notes: notes
@@ -64,12 +68,12 @@ module.exports = {
     getNote: async (req, res, next) => {
         getSingleNote(req.params.id, req.user.id, async (note) => {
             if (!note) {
-                let note = await req.user.getNotes({
+                let note = await Note.findOne({
                     where: {
-                        id: req.params.id
+                        id: req.params.id,
+                        userId: req.user.id
                     }
-                });
-                note = note[0];
+                })
                 saveSingleNote(note, req.user.id)
                 res.json({
                     status: "ok",
