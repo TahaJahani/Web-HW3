@@ -10,6 +10,8 @@ const options = {
     oneofs: true,
 };
 
+const cacheHost = process.env.CACHE_HOST
+
 var packageDefinition = protoLoader.loadSync(PROTO_PATH, options);
 
 const apiProto = grpc.loadPackageDefinition(packageDefinition);
@@ -19,7 +21,7 @@ module.exports = {
     set(key, value) {
         const SetCacheService = apiProto.SetCacheService;
         const client = new SetCacheService(
-            "localhost:50051",
+            cacheHost,
             grpc.credentials.createInsecure()
         );
         client.SetKey({ id: key, contents: value }, (error, e2) => {
@@ -31,7 +33,7 @@ module.exports = {
     get(key, onFetch) {
         const GetCacheService = apiProto.GetCacheService;
         const client = new GetCacheService(
-            "localhost:50051",
+            cacheHost,
             grpc.credentials.createInsecure()
         );
         client.GetKey({ id: key }, (error, cacheItem) => {
@@ -46,7 +48,7 @@ module.exports = {
     clear() {
         const ClearCacheService = apiProto.ClearCacheService;
         const client = new ClearCacheService(
-            "localhost:50051",
+            cacheHost,
             grpc.credentials.createInsecure()
         );
 
