@@ -1,15 +1,14 @@
 const { get, set, clear } = require("../services/CacheService")
 
 module.exports = {
-    getSingleNote(noteId, userId) {
+    getSingleNote(noteId, userId, completion) {
         let key = noteId + "-Note-" + userId + "-User";
         let note = null;
         get(key, function (content) {
             if (content != -1){
-                note = JSON.parse(content);
+                completion(JSON.parse(content));
             }
         })
-        return note;
     },
 
     getAllNotes(userId) {

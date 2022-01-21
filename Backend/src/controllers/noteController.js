@@ -61,22 +61,24 @@ module.exports = {
     },
 
     getNote: async (req, res, next) => {
-        let note = getSingleNote(req.params.id, req.user.id)
-        console.log("fetched: " + note) //THIS IS ALWAYS NULL!
-        if (!note) {
-            let note = (await req.user.getNotes({
-                where: {
-                    id: req.params.id
-                }
-            }))[0];
-            saveSingleNote(note, req.user.id)
-        }
-        res.json({
-            status: "ok",
-            result: {
-                note: note,
+        let note = getSingleNote(req.params.id, req.user.id, (note) => {
+            console.log("fetched: " + note)
+            if (!note) {
+                let note = (await req.user.getNotes({
+                    where: {
+                        id: req.params.id
+                    }
+                }))[0];
+                saveSingleNote(note, req.user.id)
             }
+            res.json({
+                status: "ok",
+                result: {
+                    note: note,
+                }
+            })
         })
+        
     },
 
     deleteNote: async (req, res, next) => {
