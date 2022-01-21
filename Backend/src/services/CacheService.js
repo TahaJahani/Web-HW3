@@ -20,23 +20,28 @@ export function set(key, value) {
         "localhost:50051",
         grpc.credentials.createInsecure()
     );
-    client.SetKey({ id: 'hi', contents: 'hello' }, (error, e2) => {
-        console.log("Saved hi->hello into cache");
+    client.SetKey({ id: key, contents: value }, (error, e2) => {
+        console.log("Saved into cache");
     });
 }
 
-export function get(key) {
+export function get(key, onFetch) {
     const GetCacheService = apiProto.GetCacheService;
     const client = new GetCacheService(
         "localhost:50051",
         grpc.credentials.createInsecure()
     );
-    client.GetKey({ id: 'hi' }, (error, cacheItem) => {
-        console.log(cacheItem.id, cacheItem.contents); // if contents = -1 then key doesnt exist in the cache
+    client.GetKey({ id: key }, (error, cacheItem) => {
+        if (cacheItem.contents == -1)
+            onFetch(null)
+        else {
+            onFetch(JSON.parse(cacheItem.contents))
+            console.log("Successfully fetched from cache");
+        }
     });
 }
 
-export function clear(key) {
+export function clear() {
     const ClearCacheService = apiProto.ClearCacheService;
     const client = new ClearCacheService(
         "localhost:50051",
