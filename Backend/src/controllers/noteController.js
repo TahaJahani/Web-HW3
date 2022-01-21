@@ -1,5 +1,5 @@
 const { Note } = require('../database/sequelize')
-const {saveSingleNote, getSingleNote} = require("../services/NotesCacheService");
+const {saveSingleNote, getSingleNote, deleteNote} = require("../services/NotesCacheService");
 
 module.exports = {
     createNote: async (req, res, next) => {
@@ -18,6 +18,7 @@ module.exports = {
             body: body,
             color: color,
         })
+        saveSingleNote(note, req.user.id)
         res.json({
             status: "ok",
             result: note
@@ -25,7 +26,6 @@ module.exports = {
     },
 
     getAllNotes: async (req, res, next) => {
-        
         let notes = await req.user.getNotes({
             attributes: ["id", "title", "color"]
         });
@@ -48,6 +48,7 @@ module.exports = {
                 id: req.params.id, userId: req.user.id
             }
         })
+        deleteNote(req.params.id, req.user.id)
         if (numChanged != 0) {
             res.json({
                 status: "ok",
@@ -61,15 +62,22 @@ module.exports = {
     },
 
     getNote: async (req, res, next) => {
-        let note = getSingleNote(req.params.id, req.user.id, async (note) => {
-            console.log("fetched: " + note)
+        getSingleNote(req.params.id, req.user.id, async (note) => {
             if (!note) {
-                let note = (await req.user.getNotes({
+                let note = await req.user.getNotes({
                     where: {
                         id: req.params.id
                     }
-                }))[0];
+                });
+                note = note[0];
                 saveSingleNote(note, req.user.id)
+                res.json({
+                    status: "ok",
+                    result: {
+                        note: note,
+                    }
+                })
+                return;
             }
             res.json({
                 status: "ok",
@@ -88,6 +96,7 @@ module.exports = {
                 userId: req.user.id,
             }
         })
+        deleteNote(req.params.id, req.user.id)
         if (numDeleted != 0) {
             res.json({
                 status: "ok",
