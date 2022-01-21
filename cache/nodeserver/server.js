@@ -2,7 +2,7 @@
 
 const grpc = require("@grpc/grpc-js");
 const PROTO_PATH = "./apifile.proto";
-import { Mutex } from 'async-mutex'
+const Mutex = require("async-mutex");
 var protoLoader = require("@grpc/proto-loader");
 
 const mutex = new Mutex();
