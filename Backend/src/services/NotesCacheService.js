@@ -5,14 +5,11 @@ module.exports = {
         let key = noteId + "-Note-" + userId + "-User";
         let note = null;
         get(key, function (content) {
-            if (content != -1){
+            if (content != "-1"){
                 completion(JSON.parse(content));
-            }
+            } else
+                completion(null)
         })
-    },
-
-    getAllNotes(userId) {
-
     },
 
     saveSingleNote(note, userId) {
@@ -20,15 +17,8 @@ module.exports = {
         set(key, JSON.stringify(note));
     },
 
-    saveAllNotes(user, notes) {
-
-    },
-
-    deleteNote(noteId) {
-
-    },
-
-    deleteAllNotes(user) {
-
+    deleteNote(noteId, userId) {
+        let key = noteId + "-Note-" + userId + "-User";
+        set(key, "-1")
     },
 }
