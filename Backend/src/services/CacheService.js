@@ -15,6 +15,7 @@ var packageDefinition = protoLoader.loadSync(PROTO_PATH, options);
 const apiProto = grpc.loadPackageDefinition(packageDefinition);
 
 module.exports = {
+    // SetKey
     set(key, value) {
         const SetCacheService = apiProto.SetCacheService;
         const client = new SetCacheService(
@@ -26,6 +27,7 @@ module.exports = {
         });
     },
 
+    // GetKey
     get(key, onFetch) {
         const GetCacheService = apiProto.GetCacheService;
         const client = new GetCacheService(
@@ -40,6 +42,7 @@ module.exports = {
         });
     },
 
+    // Clear cache
     clear() {
         const ClearCacheService = apiProto.ClearCacheService;
         const client = new ClearCacheService(
