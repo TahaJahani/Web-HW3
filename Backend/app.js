@@ -28,6 +28,7 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 
+app.set('port', process.env.PORT | 3000)
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
