@@ -90,7 +90,9 @@ server.addService(apiProto.GetCacheService.service, {
 
 server.addService(apiProto.SetCacheService.service, {
     SetKey: (cacheItem, callback) => {
-        cache.put(cacheItem.request.id, cacheItem.request.contents);
+        if (cacheItem.request.id.length <= 64 && cacheItem.request.contents.length <= 2048) {
+            cache.put(cacheItem.request.id, cacheItem.request.contents);
+        }
         callback(null, null);
     },
 });
