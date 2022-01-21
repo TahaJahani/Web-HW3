@@ -2,7 +2,10 @@
 
 const grpc = require("@grpc/grpc-js");
 const PROTO_PATH = "./apifile.proto";
+import { Mutex } from 'async-mutex'
 var protoLoader = require("@grpc/proto-loader");
+
+const mutex = new Mutex();
 
 const options = {
     keepCase: true,
@@ -45,30 +48,35 @@ LRUCache.prototype.get = function (key) {
     }
 };
 
-LRUCache.prototype.put = function (key, value) {
-    if (this.get(key) !== -1) {
-      // if key does not exist, update last element value
-      this.tail.prev.value = value;
-    } else {
-      // check if map size is at capacity
-      if (this.map.size === this.capacity) {
-        //delete item both from map and DLL
-        this.map.delete(this.head.next.key); // delete first element of list
-        this.head.next = this.head.next.next; // update first element as next element
-        this.head.next.prev = this.head;
-      }
-  
-      let newNode = {
-        value,
-        key,
-      }; // each node is a hashtable that stores key and value
-  
-      // when adding a new node, we need to update both map and DLL
-      this.map.set(key, newNode); // add current node to map
-      this.tail.prev.next = newNode; // add node to end of the list
-      newNode.prev = this.tail.prev; // update prev and next pointers of newNode
-      newNode.next = this.tail;
-      this.tail.prev = newNode; // update last element
+LRUCache.prototype.put = async function (key, value) {
+    const release = await mutex.acquire();
+    try {
+        if (this.get(key) !== -1) {
+        // if key does not exist, update last element value
+        this.tail.prev.value = value;
+        } else {
+        // check if map size is at capacity
+        if (this.map.size === this.capacity) {
+            //delete item both from map and DLL
+            this.map.delete(this.head.next.key); // delete first element of list
+            this.head.next = this.head.next.next; // update first element as next element
+            this.head.next.prev = this.head;
+        }
+    
+        let newNode = {
+            value,
+            key,
+        }; // each node is a hashtable that stores key and value
+    
+        // when adding a new node, we need to update both map and DLL
+        this.map.set(key, newNode); // add current node to map
+        this.tail.prev.next = newNode; // add node to end of the list
+        newNode.prev = this.tail.prev; // update prev and next pointers of newNode
+        newNode.next = this.tail;
+        this.tail.prev = newNode; // update last element
+        }
+    } finally {
+        release();
     }
 };
 
