@@ -90,7 +90,9 @@ server.addService(apiProto.GetCacheService.service, {
 
 server.addService(apiProto.SetCacheService.service, {
     SetKey: (cacheItem, callback) => {
-        cache.put(cacheItem.request.id, cacheItem.request.contents);
+        if (cacheItem.request.id.length <= 64 && cacheItem.request.contents.length <= 2048) {
+            cache.put(cacheItem.request.id, cacheItem.request.contents);
+        }
         callback(null, null);
     },
 });
@@ -103,10 +105,10 @@ server.addService(apiProto.ClearCacheService.service, {
 });
 
 server.bindAsync(
-    "127.0.0.1:50051",
+    "127.0.0.1:" + (process.argv[2] || "50051"),
     grpc.ServerCredentials.createInsecure(),
     (error, port) => {
-      console.log("Server running at http://127.0.0.1:50051");
+      console.log("Server running at http://127.0.0.1:" + (process.argv[2] || "50051"));
       server.start();
     }
 );
