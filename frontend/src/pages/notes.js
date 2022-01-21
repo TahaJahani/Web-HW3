@@ -76,7 +76,7 @@ function NotesPage() {
                 <Grid item xs={10}>
                     <Container maxWidth='md' sx={{pt: 8, mt: 16}}>
                         {action === 'view' ? <Note {...selectedNote} onClose={onNoteClosed} onEdit={onEditClicked} onDelete={onNoteDeleted} /> 
-                                    : action === 'show' ? <CreateNote onSubmit={onNoteSubmitted} /> : <CreateNote note={selectedNote} onSubmit={onNoteEdited} />}
+                                    : action === 'none' ? <CreateNote onSubmit={onNoteSubmitted} /> : <CreateNote note={selectedNote} onSubmit={onNoteEdited} />}
                     </Container>
                 </Grid>
             </Grid>

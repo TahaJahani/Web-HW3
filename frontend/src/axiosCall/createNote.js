@@ -2,6 +2,7 @@ const axios = require('axios')
 
 
 async function createNote(note, token, onResponse) {
+    console.log(token)
     let options = {
         method: 'post',
         url: 'http://localhost:3030/api/notes/new',
