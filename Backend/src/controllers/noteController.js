@@ -61,7 +61,7 @@ module.exports = {
     },
 
     getNote: async (req, res, next) => {
-        let note = getSingleNote(req.params.id, req.user.id, (note) => {
+        let note = getSingleNote(req.params.id, req.user.id, async (note) => {
             console.log("fetched: " + note)
             if (!note) {
                 let note = (await req.user.getNotes({
