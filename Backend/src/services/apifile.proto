@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+message CacheItem {
+    string id = 1;
+    string contents = 2;
+}
+
+message InputItem {
+    string id = 1;
+}
+
+message Empty {
+}
+
+service GetCacheService {
+    rpc GetKey (InputItem) returns (CacheItem) {}
+}
+
+service SetCacheService {
+    rpc SetKey (CacheItem) returns (Empty) {}
+}
+
+service ClearCacheService {
+    rpc Clear (Empty) returns (Empty) {}
+}
